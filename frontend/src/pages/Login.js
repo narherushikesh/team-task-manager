@@ -15,18 +15,18 @@ function Login() {
 
     try {
 
-      const res = await API.post("/auth/login", {
+      const res = await API.post("/login", {
         email,
         password,
       });
-
-      localStorage.setItem("token", res.data.token);
 
       alert(res.data.message);
 
       navigate("/dashboard");
 
     } catch (error) {
+
+      console.log(error);
 
       alert("Login failed");
 

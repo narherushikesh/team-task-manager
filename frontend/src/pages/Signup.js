@@ -16,7 +16,7 @@ function Signup() {
 
     try {
 
-      const res = await API.post("/auth/register", {
+      const res = await API.post("/signup", {
         name,
         email,
         password,
@@ -27,6 +27,8 @@ function Signup() {
       navigate("/");
 
     } catch (error) {
+
+      console.log(error);
 
       alert("Registration failed");
 
