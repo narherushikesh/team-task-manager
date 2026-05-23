@@ -1,285 +1,299 @@
-import React, { useEffect, useState } from "react";
-import API from "../services/api";
+import {
+  FaTasks,
+  FaUsers,
+  FaSignOutAlt,
+  FaClipboardList,
+} from "react-icons/fa";
+
+import {
+  PieChart,
+  Pie,
+  Cell,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+
+import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
-  const [data, setData] = useState({});
 
-  useEffect(() => {
-    fetchDashboard();
-  }, []);
+  const navigate = useNavigate();
 
-  const fetchDashboard = async () => {
-    try {
-      const token = localStorage.getItem("token");
+  const logout = () => {
 
-      const res = await API.get("/dashboard", {
-        headers: {
-          authorization: token,
-        },
-      });
+    localStorage.removeItem("token");
 
-      setData(res.data);
-    } catch (error) {
-      console.log(error);
-    }
+    navigate("/");
+
   };
 
-  const cards = [
-    {
-      title: "Projects",
-      value: data.totalProjects || 0,
-      color: "#2563eb",
-    },
-    {
-      title: "Tasks",
-      value: data.totalTasks || 0,
-      color: "#7c3aed",
-    },
-    {
-      title: "Pending",
-      value: data.pendingTasks || 0,
-      color: "#f59e0b",
-    },
-    {
-      title: "Completed",
-      value: data.completedTasks || 0,
-      color: "#22c55e",
-    },
+  const pieData = [
+    { name: "Completed", value: 8 },
+    { name: "Pending", value: 4 },
+    { name: "In Progress", value: 2 },
+  ];
+
+  const COLORS = ["#00C49F", "#FFBB28", "#FF4B5C"];
+
+  const barData = [
+    { name: "Low", value: 1 },
+    { name: "Medium", value: 2 },
+    { name: "High", value: 3 },
   ];
 
   return (
-    <div>
-      {/* Header */}
+    <div
+      style={{
+        display: "flex",
+        minHeight: "100vh",
+        background: "#f4f7fc",
+      }}
+    >
+
+      {/* SIDEBAR */}
+
       <div
         style={{
-          background:
-            "linear-gradient(to right, #2563eb, #7c3aed)",
-          borderRadius: "18px",
-          padding: "22px",
-          color: "white",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "25px",
-          flexWrap: "wrap",
+          width: "240px",
+          background: "white",
+          padding: "25px",
+          boxShadow: "0 0 10px rgba(0,0,0,0.1)",
         }}
       >
-        <div>
-          <h1
-            style={{
-              margin: 0,
-              fontSize: "28px",
-            }}
-          >
-            Dashboard 🚀
-          </h1>
 
-          <p
-            style={{
-              marginTop: "8px",
-            }}
-          >
-            Manage your projects and tasks.
-          </p>
-        </div>
-
-        <button
+        <div
           style={{
-            padding: "10px 18px",
-            border: "none",
-            borderRadius: "10px",
-            background: "white",
-            color: "#2563eb",
-            fontWeight: "bold",
-            cursor: "pointer",
+            textAlign: "center",
+            marginBottom: "40px",
           }}
         >
-          + Create Task
-        </button>
+
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+            alt=""
+            width="90"
+          />
+
+          <h2>Admin</h2>
+
+          <p>admin@gmail.com</p>
+
+        </div>
+
+        <div style={menuStyle}>
+          <FaTasks /> Dashboard
+        </div>
+
+        <div style={menuStyle}>
+          <FaClipboardList /> Manage Tasks
+        </div>
+
+        <div style={menuStyle}>
+          <FaUsers /> Team Members
+        </div>
+
+        <div
+          style={menuStyle}
+          onClick={logout}
+        >
+          <FaSignOutAlt /> Logout
+        </div>
+
       </div>
 
-      {/* Horizontal Cards */}
+
+      {/* MAIN CONTENT */}
+
       <div
         style={{
-          display: "flex",
-          gap: "15px",
-          flexWrap: "wrap",
-          marginBottom: "30px",
+          flex: 1,
+          padding: "30px",
         }}
       >
-        {cards.map((card, index) => (
-          <div
-            key={index}
-            style={{
-              width: "180px",
-              background: "white",
-              borderRadius: "15px",
-              padding: "18px",
-              boxShadow:
-                "0 5px 15px rgba(0,0,0,0.08)",
-              borderTop: `5px solid ${card.color}`,
-            }}
-          >
-            <h3
-              style={{
-                color: "#666",
-                marginBottom: "10px",
-                fontSize: "15px",
-              }}
-            >
-              {card.title}
-            </h3>
 
-            <h1
-              style={{
-                color: card.color,
-                fontSize: "28px",
-                margin: 0,
-              }}
-            >
-              {card.value}
-            </h1>
+        {/* TOP CARD */}
+
+        <div
+          style={{
+            background:
+              "linear-gradient(to right, #4776E6, #8E54E9)",
+            padding: "30px",
+            borderRadius: "20px",
+            color: "white",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "30px",
+          }}
+        >
+
+          <div>
+
+            <h1>Welcome Back 👋</h1>
+
+            <p>Manage your tasks efficiently</p>
+
           </div>
-        ))}
-      </div>
 
-      {/* Bottom Sections */}
-      <div
-        style={{
-          display: "flex",
-          gap: "20px",
-          flexWrap: "wrap",
-        }}
-      >
-        {/* Activity */}
-        <div
-          style={{
-            flex: 1,
-            minWidth: "300px",
-            background: "white",
-            borderRadius: "18px",
-            padding: "22px",
-            boxShadow:
-              "0 5px 15px rgba(0,0,0,0.08)",
-          }}
-        >
-          <h2
+          <button
             style={{
-              marginBottom: "20px",
+              padding: "12px 20px",
+              border: "none",
+              borderRadius: "10px",
+              background: "white",
+              cursor: "pointer",
             }}
           >
-            Recent Activity
-          </h2>
+            Create New Task
+          </button>
 
-          <Activity text="✅ Task Completed" />
-
-          <Activity text="📁 Project Added" />
-
-          <Activity text="📝 Task Updated" />
-
-          <Activity text="👥 Team Member Joined" />
         </div>
 
-        {/* Progress */}
+
+        {/* STATS */}
+
         <div
           style={{
-            flex: 1,
-            minWidth: "300px",
-            background: "white",
-            borderRadius: "18px",
-            padding: "22px",
-            boxShadow:
-              "0 5px 15px rgba(0,0,0,0.08)",
+            display: "grid",
+            gridTemplateColumns:
+              "repeat(auto-fit,minmax(220px,1fr))",
+            gap: "20px",
           }}
         >
-          <h2
-            style={{
-              marginBottom: "20px",
-            }}
-          >
-            Task Progress
-          </h2>
 
-          <ProgressBar
-            label="Completed"
-            value={70}
-            color="#22c55e"
-          />
+          <div style={cardStyle}>
+            <h3>Total Tasks</h3>
+            <h1>12</h1>
+          </div>
 
-          <ProgressBar
-            label="Pending"
-            value={40}
-            color="#ef4444"
-          />
+          <div style={cardStyle}>
+            <h3>Pending Tasks</h3>
+            <h1>4</h1>
+          </div>
 
-          <ProgressBar
-            label="In Progress"
-            value={55}
-            color="#f59e0b"
-          />
+          <div style={cardStyle}>
+            <h3>In Progress</h3>
+            <h1>2</h1>
+          </div>
+
+          <div style={cardStyle}>
+            <h3>Completed</h3>
+            <h1>6</h1>
+          </div>
+
         </div>
-      </div>
-    </div>
-  );
-}
 
-function Activity({ text }) {
-  return (
-    <div
-      style={{
-        background: "#f5f7fb",
-        padding: "14px",
-        borderRadius: "10px",
-        marginBottom: "12px",
-      }}
-    >
-      {text}
-    </div>
-  );
-}
 
-function ProgressBar({
-  label,
-  value,
-  color,
-}) {
-  return (
-    <div
-      style={{
-        marginBottom: "20px",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginBottom: "8px",
-        }}
-      >
-        <span>{label}</span>
+        {/* CHARTS */}
 
-        <span>{value}%</span>
-      </div>
-
-      <div
-        style={{
-          width: "100%",
-          height: "10px",
-          background: "#e5e7eb",
-          borderRadius: "10px",
-        }}
-      >
         <div
           style={{
-            width: `${value}%`,
-            height: "100%",
-            background: color,
-            borderRadius: "10px",
+            display: "grid",
+            gridTemplateColumns:
+              "repeat(auto-fit,minmax(400px,1fr))",
+            gap: "30px",
+            marginTop: "40px",
           }}
-        ></div>
+        >
+
+          {/* PIE CHART */}
+
+          <div style={chartCard}>
+
+            <h2>Task Distribution</h2>
+
+            <ResponsiveContainer width="100%" height={300}>
+
+              <PieChart>
+
+                <Pie
+                  data={pieData}
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={100}
+                  dataKey="value"
+                >
+
+                  {pieData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+
+                </Pie>
+
+                <Tooltip />
+
+              </PieChart>
+
+            </ResponsiveContainer>
+
+          </div>
+
+
+          {/* BAR CHART */}
+
+          <div style={chartCard}>
+
+            <h2>Task Priority Levels</h2>
+
+            <ResponsiveContainer width="100%" height={300}>
+
+              <BarChart data={barData}>
+
+                <XAxis dataKey="name" />
+
+                <YAxis />
+
+                <Tooltip />
+
+                <Bar
+                  dataKey="value"
+                  fill="#8884d8"
+                />
+
+              </BarChart>
+
+            </ResponsiveContainer>
+
+          </div>
+
+        </div>
+
       </div>
+
     </div>
   );
 }
+
+const menuStyle = {
+  display: "flex",
+  alignItems: "center",
+  gap: "10px",
+  padding: "15px",
+  marginBottom: "10px",
+  borderRadius: "10px",
+  cursor: "pointer",
+  background: "#f4f7fc",
+};
+
+const cardStyle = {
+  background: "white",
+  padding: "25px",
+  borderRadius: "15px",
+  boxShadow: "0 5px 15px rgba(0,0,0,0.1)",
+};
+
+const chartCard = {
+  background: "white",
+  padding: "20px",
+  borderRadius: "20px",
+  boxShadow: "0 5px 15px rgba(0,0,0,0.1)",
+};
 
 export default Dashboard;

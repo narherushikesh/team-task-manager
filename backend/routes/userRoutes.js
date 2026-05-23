@@ -1,14 +1,26 @@
-const express = require("express");
+const mongoose = require("mongoose");
 
-const router = express.Router();
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
 
-const authMiddleware = require("../middleware/authMiddleware");
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
 
-router.get("/profile", authMiddleware, (req, res) => {
-  res.status(200).json({
-    message: "Protected route accessed",
-    user: req.user,
-  });
-});
+    password: {
+      type: String,
+      required: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-module.exports = router;
+module.exports = mongoose.model("User", userSchema);
